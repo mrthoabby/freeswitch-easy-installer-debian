@@ -1,11 +1,17 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 <SignalWireToken>"
+    echo "Usage: $0 <SignalWireToken> [join]"
     exit 1
 fi
 
 TOKEN="$1"
+CREATE_LINKS=false
+
+# Check if "join" parameter is provided
+if [ "$2" == "join" ]; then
+    CREATE_LINKS=true
+fi
 
 apt-get update && apt-get install -y gnupg2 wget lsb-release
 
@@ -22,6 +28,9 @@ apt-get update && apt-get install -y freeswitch-meta-all
 
 # Get installed Freeswitch version
 INSTALLED_VERSION=$(dpkg -l | grep freeswitch-meta-all | awk '{print $3}')
+
+echo "Freeswitch was installed successfully."
+echo "Installed version: $INSTALLED_VERSION"
 
 # Check if links should be created
 if [ "$CREATE_LINKS" = true ]; then
@@ -44,7 +53,3 @@ if [ "$CREATE_LINKS" = true ]; then
 else
     echo "No se crearon enlaces simbólicos. Para crearlos, proporciona el parámetro 'join' después del token."
 fi
-
-
-echo "Freeswitch was installed successfully."
-echo "Installed version: $INSTALLED_VERSION"
